@@ -1,0 +1,55 @@
+.postDialogueBox {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.postDialogueBox__input {
+    width: 100% !important;
+    /* height: 100px; */
+    padding: 0px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.postDialogueBox__input textarea {
+    border: none;
+    /* padding: 00px 10px; */
+}
+
+.postDialogueBox__input textarea:focus {
+    outline: none;
+}
+
+.postDialogueBoxIconsRow {
+    padding: 0px !important;
+}
+
+.postDialogueBoxIcons img {
+    width: 1.5rem;
+}
+
+.postDialogueBoxIconsRightSide img {
+    width: 1.5rem;
+}
+
+.postDialogueBoxIcons {
+    font-weight: 500;
+}
+
+.postDialogueBoxIcons {
+    background-color: rgb(228, 225, 225);
+    padding-left: 5px !important;
+    padding: 5px;
+    border-radius: 0.4rem;
+    margin: 5px;
+}
+
+.postDialogueBoxIconsRightSide {
+    display: flex;
+    margin: 5px;
+    align-items: center;
+    border-radius: 0.4rem;
+    justify-content: right;
+    background-color: rgb(228, 225, 225);
+
+}

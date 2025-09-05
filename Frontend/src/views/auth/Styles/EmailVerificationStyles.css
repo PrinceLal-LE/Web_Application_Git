@@ -1,0 +1,27 @@
+.otp-input-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Space between boxes */
+    margin-bottom: 20px;
+}
+
+.otp-input-box {
+    width: 50px; /* Width of each box */
+    height: 50px; /* Height of each box */
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 2px solid #ced4da; /* Bootstrap default border color */
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.otp-input-box:focus {
+    border-color: #007bff; /* Primary color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Bootstrap focus shadow */
+}
+
+/* Optional: style for filled boxes */
+.otp-input-box:not(:placeholder-shown) {
+    background-color: #e9ecef; /* Light gray for filled boxes */
+}

@@ -1,0 +1,22 @@
+.connectButtonColor button {
+    background-color: #d8e8fc;
+    color: #4c7fd8;
+    font-weight: 700;
+}
+
+.connectionBussinessBox {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
+}

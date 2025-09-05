@@ -1,0 +1,8 @@
+.upgradeSkillContainerSkillConnect {
+    background-color: white;
+    border-radius: 15px;
+}
+.upgradeSkillCardSkillConnect {
+    border: 1px solid rgb(190, 190, 190) !important;
+    border-radius: 0.6rem;
+}

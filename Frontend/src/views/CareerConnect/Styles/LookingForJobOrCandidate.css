@@ -1,0 +1,16 @@
+
+
+.jobPostButton {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.jobPostButton button {
+    background-color: #d8e8fc;
+    color: #4c7fd8;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    border: 0px;
+    font-weight: 600;
+    font-size: larger;
+}

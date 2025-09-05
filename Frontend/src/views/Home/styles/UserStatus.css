@@ -1,0 +1,60 @@
+.userStatusRow {
+    /* Add some vertical margin to separate it from other content */
+    /* margin-top: 1.5rem ;
+    margin-bottom: 1.5rem; */
+
+    /* Ensure it's a flex container for column distribution */
+    display: flex;
+
+    /* Optional: Add some horizontal padding to the row if needed, 
+     or let the parent container handle it */
+    /* padding: 0 1rem; */
+}
+
+.userStatusCol {
+    /* Make each column grow equally */
+    flex-grow: 1;
+    flex-basis: 0;
+    /* Ensures even distribution before content */
+
+    /* Center the text and numbers within each column */
+    text-align: space-around;
+
+    /* Add some internal vertical padding */
+}
+
+/* Add a vertical divider to all columns except the last one */
+.userStatusCol:not(:last-child) {
+    border-right: 1px solid #0a0909;
+    /* Adjust color as needed for the divider */
+}
+
+.stats-number {
+    font-size: 1.1em;
+    /* Larger size for the number */
+    font-weight: 700;
+    /* Bolder for the number */
+    color: #333;
+    /* Darker color for the number */
+    line-height: 1.2;
+    /* Adjust vertical spacing for the number */
+}
+
+.stats-label {
+    font-size: 0.8em;
+    /* Smaller size for the label */
+    color: #666;
+    /* Lighter color for the label */
+    text-transform: capitalize;
+    /* Ensures "Post", "Followers", etc., are capitalized */
+    line-height: 1.2;
+    /* Adjust vertical spacing for the label */
+}
+
+/* Add a vertical divider to all columns except the last one */
+.userStatusRow {
+    width:80%;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #a8a8a8;
+    /* Adjust color as needed for the divider */
+}

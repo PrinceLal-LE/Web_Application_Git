@@ -1,0 +1,169 @@
+.homeContainer {
+    max-width: 1500px !important;
+}
+
+.leftSideBar {
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    text-align: center;
+    position: relative;
+}
+
+.leftSideBarBanner {
+    width: 100%;
+    height: 95px;
+    border-radius: 20px 20px 0px 0px;
+    object-fit: cover;
+}
+
+.avtarLeftSideBar {
+    width: 100px;
+    /* Adjust size as needed */
+    height: 100px;
+    /* Adjust size as needed */
+    /* border: 4px solid white; */
+    /* Add a white border as seen in the first image */
+    position: absolute;
+    /* Position the avatar relative to its parent (.leftSideBar) */
+    bottom: auto;
+    /* Remove any default top positioning */
+    top: 0;
+    /* Align to the bottom of the parent */
+    transform: translateY(50%);
+    /* Move the avatar up by half of its own height to overlap */
+    /* You might need to adjust 'left' or use flexbox/grid for horizontal centering if needed, but 'align-items: center' on the parent might be enough */
+    margin-bottom: -50px;
+    /* Adjust this value to pull the content below up, effectively hiding the overlap space. This value should be half of the height of the avatar. */
+}
+
+.designationText {
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.userName {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 70px;
+}
+
+/* List spacing in the left side bar */
+.listSpacingSetting {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.listSpacingSetting .list-group-item {
+    margin-bottom: 10px;
+}
+
+.listSpacingSetting .list-group-item {
+    border: 2px solid var(--bs-list-group-border-color, rgba(0, 0, 0, .125)) !important;
+    padding: var(--bs-list-group-item-padding-y, 0.5rem) var(--bs-list-group-item-padding-x, 1rem);
+    display: flex;
+    /* Makes the item a flex container */
+    align-items: center;
+    /* Vertically centers the icon and text */
+    gap: 10px;
+}
+
+.listSpacingSetting .list-group-item {
+    border-radius: var(--bs-list-group-border-radius, 0.475rem) !important;
+}
+
+.listSpacingSetting .list-group-item:last-child {
+    justify-content: center;
+    text-align: center;
+    background-color: #d8e8fc;
+    color: #4c7fd8;
+    font-weight: 700;
+    border: 15px !important;
+}
+
+/* ListShortcutSetting css*/
+.listShortCutSetting {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.listShortCutSetting .list-group-item:not(:last-child) {
+    padding-left: 35px !important;
+}
+.listShortCutSetting .list-group-item:last-child {
+    justify-content: center;
+    border-top: 2px solid #a09f9f!important;
+    border-radius: 15px !important;
+}
+
+.listShortCutSetting .list-group-item {
+    margin-bottom: 10px;
+}
+
+.listShortCutSetting .list-group-item {
+    border: 0 !important;
+    padding: var(--bs-list-group-item-padding-y, 0.5rem) var(--bs-list-group-item-padding-x, 1rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listShortCutSetting .list-group-item {
+    border-radius: var(--bs-list-group-border-radius, 0.475rem) !important;
+}
+
+.bottomRow .col{
+    font-size: smaller;
+    padding: 0px !important;
+    display: flex;
+}
+
+.leftSideBarFooter {
+    padding-bottom: 2rem; /* Add some space at the bottom of the footer */
+}
+
+
+
+.leftSideBarFooterLink .col-auto {
+    font-size: 0.85rem; /* Smaller font size as in the image */
+    font-weight: 700;
+    padding: 0; /* Remove default column padding to make them tight */
+    margin-right: 1rem !important; /* Add space between links, adjust as needed */
+}
+
+.leftSideBarFooterRssLink {
+    text-align: center; /* Center the icon and text */
+    font-size: 0.9rem;
+    color: #666; /* Adjust color */
+}
+
+.leftSideBarFooterFollowSection {
+    text-align: center; /* Center the text */
+}
+
+.leftSideBarFooterFollowSection p {
+    font-size: 1.1rem; /* Adjust font size */
+    font-weight: bold; /* Make it bold */
+    color: #4A90E2; /* Blue color as in the image */
+}
+
+/* Styling for Copyright section */
+.leftSideBarFooterCopyRightSection {
+    text-align: center; /* Center the copyright text */
+    font-size: 0.8rem;
+    color: #888; /* Lighter color for copyright */
+}
+
+/* Ensure paragraph margins are reset if they inherit default browser styles */
+.leftSideBarFooterRssLink p,
+.leftSideBarFooterFollowSection p,
+.leftSideBarFooterCopyRightSection p {
+    margin-bottom: 0;
+}
+

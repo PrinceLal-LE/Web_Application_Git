@@ -1,0 +1,60 @@
+
+
+.listMySkillSkillConnect {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.listMySkillSkillConnect .list-group-item:not(:last-child) {
+    padding-left: 15px !important;
+}
+.listMySkillSkillConnect .list-group-item:last-child {
+    justify-content: center;
+    border-top: 2px solid #a09f9f!important;
+    border-radius: 0px !important;
+}
+
+.listMySkillSkillConnect .list-group-item {
+    margin-bottom: 10px;
+}
+
+.listMySkillSkillConnect .list-group-item {
+    border: 0 !important;
+    padding: var(--bs-list-group-item-padding-y, 0.5rem) var(--bs-list-group-item-padding-x, 1rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listMySkillSkillConnect .list-group-item {
+    border-radius: var(--bs-list-group-border-radius, 0.475rem) !important;
+}
+
+/* ListShortcutSetting css*/
+.listShortCutSetting {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.listShortCutSettingMySkill .list-group-item:not(:last-child) {
+    padding-left: 20px !important;
+}
+.listShortCutSettingMySkill .list-group-item:last-child {
+    justify-content: center;
+    border-top: 2px solid #a09f9f!important;
+    border-radius: 0px 0px 15px 15px !important;
+}
+
+.listShortCutSetting .list-group-item {
+    margin-bottom: 10px;
+}
+
+.listShortCutSettingMySkill .list-group-item {
+    border: 0 !important;
+    padding: var(--bs-list-group-item-padding-y, 0.5rem) var(--bs-list-group-item-padding-x, 1rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

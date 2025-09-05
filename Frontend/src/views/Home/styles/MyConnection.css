@@ -1,0 +1,36 @@
+.addIcon {
+    background-color: #d8e8fc !important;
+    border: none !important;
+    color: #4c7fd8 !important;
+}
+
+.acceptedIcon {
+    background-color: #4c7fd8 !important;
+}
+
+.acceptButtonMyConnectPane {
+    background-color: #d8e8fc !important;
+    color: #4c7fd8 !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    padding: 5px 20px !important;
+}
+
+.ignoreButtonMyConnectPane {
+    border-radius: 8px !important;
+    background-color: #fcd8d8 !important;
+    color: #d84c4c !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    border: 0 !important;
+    padding: 5px 20px !important;
+}
+
+.loadMoreConnectionMyConnectPane {
+    background-color: #d8e8fc !important;
+    color: #4c7fd8 !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+}

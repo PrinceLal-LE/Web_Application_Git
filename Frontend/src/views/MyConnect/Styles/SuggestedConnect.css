@@ -1,0 +1,18 @@
+.suggestionContainer {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px 20px !important;
+}
+
+.profileCardSuggestedConnect {
+    border: 1px solid #afafaf !important;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+}
+
+.connectButtonSuggestedConnect {
+    background-color: #d8e8fc !important;
+    color: #4c7fd8 !important;
+    font-weight: 700 !important;
+    border: 0 !important;
+}

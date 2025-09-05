@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* font-size: 100% ; */
+  background-color: rgba(240, 241, 241, 0.397);
+  font-size: 1rem !important;
+
+}
+
+body {
+  background-color: rgba(107, 107, 107, 0.397) !important;
+  /* This sets the global background color */
+}
+
+
+/* Ensure the main app content takes up available space below the navbar */
+.main-content {
+  /* You might want to add padding or margin here depending on your layout needs */
+  padding-top: 10px;
+  /* Just an example, adjust as needed */
+}
+
+html .Container {
+  font-size: 2rem !important;
+  max-width: 1500px !important;
+}

@@ -1,0 +1,7 @@
+// src/fontawesome.js
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckSquare, faCoffee, faHome, faUser,faBell,faNetworkWired, faStar, faGear,faGears, faGlobe, faCalendar, faMessage, faPeopleArrows, faAngleDown,faAngleUp,faRssSquare, faEllipsis, faHeart, faComment, faShare, faLink, faPlus, faUserCheck, faUserGroup, faPersonChalkboard , faHandshake, faHandHoldingDollar, faUserGraduate, faCircleXmark, faBookmark, faPenToSquare, faPencil,faSearch, faPaperclip,faImage,faGift,faFaceSmile, faEllipsisH,faPlusSquare,faTrash   } from '@fortawesome/free-solid-svg-icons'; // Import specific solid icons
+import { faTwitter, faFacebook, faGithub, faXTwitter, faLinkedin, faInstagram, faPinterest } from '@fortawesome/free-brands-svg-icons'; // Import specific brand icons
+
+// Add the imported icons to the library
+library.add(faCheckSquare, faCoffee, faHome, faUser, faTwitter,faBell , faFacebook, faGithub,faNetworkWired, faStar, faGear,faGears, faGlobe, faCalendar,faPeopleArrows, faMessage,faAngleDown,faAngleUp,faRssSquare, faEllipsis, faHeart, faComment, faShare, faLink, faPlus, faUserCheck, faUserGroup, faPersonChalkboard, faHandshake,faHandHoldingDollar,faUserGraduate, faCircleXmark, faXTwitter,faLinkedin,faInstagram, faPinterest,faBookmark,faPenToSquare,faPencil,faSearch, faPaperclip,faImage,faGift,faFaceSmile, faEllipsisH,faPlusSquare,faTrash );

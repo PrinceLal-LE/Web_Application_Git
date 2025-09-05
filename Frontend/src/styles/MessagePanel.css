@@ -1,0 +1,271 @@
+/* src/styles/MessagePanel.css */
+
+.message-panel-container {
+    background-color: #f3f2ef; /* Light grey background */
+    min-height: calc(100vh - 70px); /* Adjust based on navbar height */
+    overflow: hidden;
+    max-width: 1500px !important; /* From your homeContainer */
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.message-panel-row {
+    border-radius: 15px;
+    overflow: hidden; /* Ensures rounded corners apply to content */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    min-height: calc(100vh - 100px); /* Ensure panels fill vertical space */
+}
+
+/* Left Sidebar (Chat List) */
+.message-list-sidebar {
+    background-color: white;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.message-list-header {
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.search-messages-input {
+    border-radius: 5px;
+    background-color: #eef3f8;
+    border: none;
+    padding-left: 1rem;
+    font-size: 0.9rem;
+}
+
+.search-messages-button {
+    background-color: #eef3f8;
+    border: none;
+    color: #666;
+    border-radius: 5px; /* Ensure button corner matches input */
+}
+
+/* Filter Tabs */
+.message-filter-tabs .nav-link {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    border: none;
+    padding: 0.5rem 0.8rem;
+    margin-right: 0.5rem;
+    white-space: nowrap; /* Prevent tabs from wrapping */
+}
+
+.message-filter-tabs .nav-link.active {
+    color: #0077b5; /* LinkedIn blue */
+    border-bottom: 2px solid #0077b5;
+    background-color: transparent;
+}
+
+.message-filter-tabs .nav-item {
+    margin-bottom: -1px; /* To prevent double border with active tab */
+}
+
+.message-list-body {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable scrolling for chat list */
+    padding-right: 0; /* Important for scrollbar inside */
+}
+
+.message-list-item {
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    position: relative; /* For unread badge positioning */
+}
+
+.message-list-item:hover {
+    background-color: #f8f8f8;
+}
+
+.message-list-item.active {
+    background-color: #e0e0e0; /* Highlight active chat */
+    border-left: 3px solid #0077b5; /* Active indicator */
+}
+
+.chat-avatar {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+}
+
+.last-message-text {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; /* Ensure text doesn't overflow */
+}
+
+.unread-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #0077b5 !important;
+    font-size: 0.7rem;
+    padding: 0.3em 0.5em;
+    border-radius: 10px;
+}
+
+/* Right Panel (Active Chat Window) */
+.active-chat-panel {
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+}
+
+.active-chat-header {
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.active-chat-actions .btn {
+    font-size: 1.1rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.chat-messages-body {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable scrolling for messages */
+    padding-bottom: 15px; /* Space above input area */
+}
+
+.message-bubble-container {
+    display: flex;
+    align-items: flex-end; /* Align bubbles to bottom if avatars are different heights */
+}
+
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
+.message-bubble {
+    max-width: 70%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    word-wrap: break-word; /* Ensure long words break */
+}
+
+.other-message {
+    background-color: #e0e0e0; /* Light grey for others' messages */
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0; /* Sharp corner towards sender */
+}
+
+.my-message {
+    background-color: #d8e8fc; /* Light blue for my messages */
+    color: #333;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0; /* Sharp corner towards sender */
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: #666;
+}
+
+/* File Message specific styling */
+.file-message {
+    background-color: #eef3f8; /* A bit different background for file messages */
+    border: 1px solid #d3dce0;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.file-message img {
+    height: 24px;
+    width: auto;
+}
+
+
+/* Chat Input Area */
+.chat-input-area {
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+}
+
+.suggested-replies .btn {
+    background-color: #f2f6fc;
+    color: #0077b5;
+    border-color: #d8e8fc;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.suggested-replies .btn:hover {
+    background-color: #e0e0e0;
+}
+
+.message-input-textarea {
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    resize: none; /* Disable manual resizing */
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.message-input-textarea:focus {
+    border-color: #0077b5;
+    box-shadow: 0 0 0 0.25rem rgba(0, 119, 181, 0.25);
+}
+
+.send-button {
+    background-color: #0077b5;
+    border: none;
+    border-radius: 15px;
+    margin-left: 0.5rem;
+    font-weight: 600;
+}
+
+.chat-input-actions .btn {
+    font-size: 1.1rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Hide scrollbar for aesthetic purposes (similar to your other files) */
+.message-list-body::-webkit-scrollbar,
+.chat-messages-body::-webkit-scrollbar {
+    display: none;
+}
+.message-list-body {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.chat-messages-body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .message-panel-row {
+        flex-direction: column; /* Stack columns on small screens */
+    }
+
+    .message-list-sidebar, .active-chat-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0; /* Add bottom border when stacked */
+    }
+    
+    /* Make active chat panel hide by default on mobile, or show only chat list */
+    /* You would need state management to toggle visibility of these panels on mobile */
+    .active-chat-panel {
+        /* On mobile, you might start with only the chat list visible, and
+           show the active chat panel when an item is selected. This requires JS logic. */
+        /* For now, just make it full width */
+    }
+}

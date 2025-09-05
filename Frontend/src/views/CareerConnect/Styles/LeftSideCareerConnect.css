@@ -1,0 +1,28 @@
+
+
+.listCareerConnect {
+    border: none !important;
+    border-radius: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+.listCareerConnect .list-group-item:not(:last-child) {
+    padding-left: 15px !important;
+}
+
+
+.listCareerConnect .list-group-item {
+    margin-bottom: 10px;
+}
+
+.listCareerConnect .list-group-item {
+    border: 0 !important;
+    padding: var(--bs-list-group-item-padding-y, 0.5rem) var(--bs-list-group-item-padding-x, 1rem);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.listCareerConnect .list-group-item {
+    border-radius: var(--bs-list-group-border-radius, 0.475rem) !important;
+}

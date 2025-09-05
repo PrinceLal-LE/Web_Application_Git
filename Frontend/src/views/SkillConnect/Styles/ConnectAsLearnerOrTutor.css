@@ -1,0 +1,13 @@
+.connectAsLearnerOrTutorContainer {
+    background-color: white;
+    border-radius: 15px;
+}
+
+.connectAsLearnerOrTutorContainer button {
+    background-color: #d8e8fc;
+    color: #4c7fd8;
+    margin-bottom: 1rem;
+    border: 0px;
+    font-weight: 600;
+    font-size: larger;
+}
