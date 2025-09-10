@@ -37,7 +37,7 @@ const eventsData = [
 export const Events = () => {
     return (
         <>
-            <Container className="mt-3 mb-3 pt-3 connectionBussinessBox bg-white p-4" style={{ maxWidth: '100%' }}>
+            <Container className="mt-3 mb-3 pt-3 connectionBussinessBox bg-white p-4" style={{ maxWidth: '100%', border: '2px solid black',borderRadius: '15px' }}>
                 {/* <div className="d-flex justify-content-between align-items-center mb-3 ">
                     <h5 className="text-left fw-bold mb-0">Events</h5>
                 </div> */}

@@ -1,6 +1,7 @@
 .userPostBox {
     background-color: white;
     border-radius: 15px;
+    border: 2px solid black !important;
 }
 
 .card {
@@ -8,7 +9,6 @@
 
     /* padding: 0% 10px; */
     border-radius: 15px !important;
-    border: none !important;
     margin-bottom: 10px;
 }
 

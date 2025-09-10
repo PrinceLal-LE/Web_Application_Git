@@ -24,57 +24,112 @@ const deleteFile = (filePath) => {
 };
 
 // --- POST /api/posts/create ---
+// const createPost = async (req, res) => {
+//     try {
+//         const { content, data } = req.body;
+//         const authenticatedUserId = req.userId; // From authMiddleware
+
+//         if (!content) {
+//             return res.status(400).json({ message: 'Post content is required.' });
+//         }
+
+//         const postData = {
+//             user: authenticatedUserId,
+//             content,
+//         };
+//         if (data) {
+//             try {
+//                 postData.data = JSON.parse(data);
+//             } catch (e) {
+//                 console.error('Error parsing data JSON:', e);
+//                 return res.status(400).json({ message: 'Invalid format for data options.' });
+//             }
+//         }
+
+//         // Handle file uploads from multer
+//         if (req.files) {
+//             const images = req.files.images;
+//             const video = req.files.video ? req.files.video[0] : null;
+//             const userUserId = req.user.userId;
+
+//             if (images) {
+//                 const imageDetails = images.map(file => ({
+//                     filename: file.filename,
+//                     filepath: path.join(userUserId, file.filename),
+//                 }));
+//                 postData.images = imageDetails;
+//             }
+
+//             if (video) {
+//                 postData.video = {
+//                     filename: video.filename,
+//                     filepath: path.join(userUserId, video.filename),
+//                 };
+//             }
+//         }
+
+//         const newPost = new Post(postData);
+//         await newPost.save();
+
+//         // Populate user data for the response
+//         await newPost.populate('user', 'name userId profile_photo_filepath');
+
+//         res.status(201).json({ message: 'Post created successfully.', post: newPost });
+
+//     } catch (error) {
+//         console.error('Error creating post:', error);
+//         res.status(500).json({ message: 'Server error creating post.', error: error.message });
+//     }
+// };
 const createPost = async (req, res) => {
     try {
-        const { content, data } = req.body;
-        const authenticatedUserId = req.userId; // From authMiddleware
+        const {
+            main_option, sub_option, suboption_other, title, description, location,
+            contact_details_firstName, contact_details_lastName, contact_details_company,
+            contact_details_mobile, contact_details_email, can_mould_connect
+        } = req.body;
+        const authenticatedUserId = req.userId;
+        const userUserId = req.user.userId;
 
-        if (!content) {
-            return res.status(400).json({ message: 'Post content is required.' });
+        // Basic validation for mandatory fields
+        if (!main_option || !sub_option || !title || !contact_details_firstName || !contact_details_lastName) {
+            return res.status(400).json({ message: 'Missing mandatory fields.' });
         }
 
         const postData = {
             user: authenticatedUserId,
-            content,
+            main_option,
+            sub_option: sub_option === 'Other' ? suboption_other : sub_option,
+            title,
+            description,
+            location,
+            contact_details: {
+                firstName: contact_details_firstName,
+                lastName: contact_details_lastName,
+                company: contact_details_company,
+                mobile: contact_details_mobile,
+                email: contact_details_email,
+            },
+            can_mould_connect,
+            is_approved_by_admin: 0, // Default to pending approval
         };
-        if (data) {
-            try {
-                postData.data = JSON.parse(data);
-            } catch (e) {
-                console.error('Error parsing data JSON:', e);
-                return res.status(400).json({ message: 'Invalid format for data options.' });
-            }
-        }
 
         // Handle file uploads from multer
-        if (req.files) {
-            const images = req.files.images;
-            const video = req.files.video ? req.files.video[0] : null;
-            const userUserId = req.user.userId;
-
-            if (images) {
-                const imageDetails = images.map(file => ({
-                    filename: file.filename,
-                    filepath: path.join(userUserId, file.filename),
-                }));
-                postData.images = imageDetails;
-            }
-
-            if (video) {
-                postData.video = {
-                    filename: video.filename,
-                    filepath: path.join(userUserId, video.filename),
-                };
-            }
+        if (req.files && req.files.attachments) {
+            const attachments = req.files.attachments;
+            postData.attachments = attachments.map(file => ({
+                filename: file.filename,
+                filepath: path.join(userUserId, file.filename),
+                mimetype: file.mimetype,
+            }));
         }
 
         const newPost = new Post(postData);
         await newPost.save();
 
-        // Populate user data for the response
         await newPost.populate('user', 'name userId profile_photo_filepath');
 
-        res.status(201).json({ message: 'Post created successfully.', post: newPost });
+        res.status(201).json({ message: 'Post submitted for admin approval.', post: newPost });
 
     } catch (error) {
         console.error('Error creating post:', error);
@@ -82,10 +137,14 @@ const createPost = async (req, res) => {
     }
 };
 
+
 // --- GET /api/posts/feed ---
 const getPostFeed = async (req, res) => {
     try {
-        const posts = await Post.find({ is_deleted: { $ne: 1 } })
+        const posts = await Post.find({
+            is_deleted: { $ne: 1 },
+            is_approved_by_admin: 1 // Only fetch posts where approval status is 1
+        })
             .sort({ createdAt: -1 })
             .populate('user', 'name userId')
             .populate('comments.user', 'name userId');

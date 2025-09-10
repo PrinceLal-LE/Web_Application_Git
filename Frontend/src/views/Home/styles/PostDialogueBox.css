@@ -53,3 +53,29 @@
     background-color: rgb(228, 225, 225);
 
 }
+
+.mould-connect-contact-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.mould-connect-contact-box p {
+    margin: 0;
+}
+
+.mould-connect-contact-box strong {
+    font-weight: bold;
+}
+
+.modal-content{
+border:2px solid black !important;
+}
+.modal-backdrop.show {
+    opacity: 0.9 !important; /* Adjust this value (0.85 to 1.0) for desired darkness */
+}

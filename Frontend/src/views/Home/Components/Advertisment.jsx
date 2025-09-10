@@ -69,7 +69,7 @@ export const Advertisment = () => {
     const currentAd = advertisements[currentAdIndex];
     return (
         <>
-            <Card className="rounded-3 border-0 p-0 mb-4" style={{ position: 'sticky', top: '20px', zIndex: '1020', maxWidth: '100%' }}>
+            <Card className="p-0 mb-4 advertismentCard" style={{ position: 'sticky', top: '20px', zIndex: '1020', maxWidth: '100%'}}>
                 <div className="position-relative">
                     <Image style={{width : '100%', height : "250px"}}
                         src={currentAd.imageSrc}

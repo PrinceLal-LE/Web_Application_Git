@@ -20,5 +20,23 @@ router.get('/checkbox-options', async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 });
+// New route to fetch sub-options based on main option ID
+router.get('/sub-options/:mainOptionId', async (req, res) => {
+    try {
+        const { mainOptionId } = req.params;
+        // Use findById to get the specific data item and its suboptions
+        const dataItem = await DataItem.findById(mainOptionId).select('suboption').lean();
+
+        if (!dataItem) {
+            return res.status(404).json({ message: 'Main option not found.' });
+        }
+
+        // Return the array of sub-options
+        res.status(200).json(dataItem.suboption || []);
+    } catch (error) {
+        console.error("Error fetching sub-options:", error);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+});
 
 module.exports = router;

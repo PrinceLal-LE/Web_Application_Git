@@ -68,7 +68,7 @@ export const LeftSideBar = () => {
     const coverPhotoUrl = user?.cover_photo_filepath ? `${API_BASE_URL}/eRepo/${user.cover_photo_filepath}` : defaultCoverPhoto;
 
     return <>
-        <Container fluid className="leftSideBar ms-auto bg-white px-0">
+        <Container fluid className="leftSideBar ms-auto bg-white px-0" style={{ border: '2px solid black' }}>
             {/* <img src="/home/Left_side_icon.png" className="leftSideBarBanner" alt="Left Side Icon" /> */}
             <img src={coverPhotoUrl} className="leftSideBarBanner" alt="Cover Photo" />
             {loading ? (
@@ -88,6 +88,7 @@ export const LeftSideBar = () => {
                 <ListGroup.Item ><FontAwesomeIcon fixedWidth icon="network-wired" color="#74C0FC" /> Connection</ListGroup.Item>
                 <ListGroup.Item ><FontAwesomeIcon fixedWidth icon="star" color="#74C0FC" /> Revenue</ListGroup.Item>
                 <ListGroup.Item ><FontAwesomeIcon fixedWidth icon="gear" color="#74C0FC" /> Setting</ListGroup.Item>
+                <ListGroup.Item ><FontAwesomeIcon fixedWidth icon="signs-post" color="#74C0FC" /> My Post</ListGroup.Item>
                 <ListGroup.Item as={Link} to="/profile" className='text-center'>View Profile</ListGroup.Item>
             </ListGroup>
             {/* Status of the user */}

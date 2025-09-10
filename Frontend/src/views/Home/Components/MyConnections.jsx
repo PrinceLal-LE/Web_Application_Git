@@ -83,8 +83,8 @@ const connectionsData = [
 export const Myconnections = () => {
     return (
         <>
-            <Container className="my-0 p-0" style={{ maxWidth: '100%' }}>
-                <Card className="  border-0 p-3" style={{ borderRadius: '15px' }}>
+            <Container className="my-0 p-0" style={{ maxWidth: '100%', border: '2px solid black',borderRadius: '15px'  }}>
+                <Card className="  border-0 p-3 mb-0" style={{ borderRadius: '15px' }}>
                     <Card.Header className="bg-white px-0 pt-0 pb-0 border-bottom-0">
                         <h4 className="mb-2 mt-1 fw-bolder">My Connections/ Opportunities</h4>
                     </Card.Header>

@@ -5,7 +5,7 @@ import { UserPostBox } from './Components/UserPostBox';
 export const CenterBar = () => {
     return <>
        {/* Dialogue Box for the posting */}
-        <PostDialogueBox />
+        <PostDialogueBox  />
 
         {/* Connection Business/project pane */}
         <ConnectionBussinessBox />

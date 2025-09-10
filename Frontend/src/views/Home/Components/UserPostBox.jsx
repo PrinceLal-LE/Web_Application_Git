@@ -1,19 +1,19 @@
 // Frontend/src/views/Home/Components/UserPostBox.jsx
-import React, { useState, useEffect } from 'react';
-import { Container, Card, Image, Button, Form, Row, Col, Spinner, Alert } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { Container, Card, Image, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faComment, faShare, faLink, faEllipsis, faTrash, faPencilAlt, faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment, faShare, faTrash, faFilePdf, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-
 import '../styles/UserPostBox.css';
+
 const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
-const defaultProfilePic = '/home/avtar.png';
+const defaultProfilePic = '/images/avtar.png';
 
 // Component to render a single comment
 const CommentItem = ({ comment, postId, onEdit, onDelete, currentUserId }) => {
-    const isCommentOwner = comment.user._id === currentUserId;
+    const isCommentOwner = comment.user?._id === currentUserId;
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(comment.text);
     const [commentEditError, setCommentEditError] = useState('');
@@ -31,13 +31,13 @@ const CommentItem = ({ comment, postId, onEdit, onDelete, currentUserId }) => {
     return (
         <div className="d-flex align-items-start mb-2">
             <Image
-                src={comment.user.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${comment.user.profile_photo_filepath}` : defaultProfilePic}
+                src={comment.user?.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${comment.user.profile_photo_filepath}` : defaultProfilePic}
                 roundedCircle
                 style={{ width: '36px', height: '36px', objectFit: 'cover' }}
                 className="me-3"
             />
             <div className="flex-grow-1 bg-light rounded-3 p-3">
-                <h6 className="mb-1 fw-bold" style={{ fontSize: '0.9rem' }}>{comment.user.name}</h6>
+                <h6 className="mb-1 fw-bold" style={{ fontSize: '0.9rem' }}>{comment.user?.name || 'Unknown User'}</h6>
                 {isEditing ? (
                     <>
                         <Form.Control
@@ -58,12 +58,6 @@ const CommentItem = ({ comment, postId, onEdit, onDelete, currentUserId }) => {
                     <>
                         <p className="mb-2" style={{ fontSize: '0.85rem' }}>{comment.text}</p>
                         <div className="d-flex" style={{ fontSize: '0.75rem' }}>
-                            {/* <Button variant="link" className="text-muted p-0 me-3 text-decoration-none">
-                                Like ({comment.likes?.length || 0})
-                            </Button>
-                            <Button variant="link" className="text-muted p-0 me-3 text-decoration-none">
-                                Reply
-                            </Button> */}
                             {isCommentOwner && (
                                 <>
                                     <Button variant="link" className="text-muted p-0 me-3 text-decoration-none" onClick={() => setIsEditing(true)}>
@@ -86,7 +80,7 @@ export const UserPostBox = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [commentInput, setCommentInput] = useState('');
+    const [commentInputs, setCommentInputs] = useState({});
     const [showCommentSection, setShowCommentSection] = useState(null);
     const { user, token, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -125,28 +119,32 @@ export const UserPostBox = () => {
         fetchPosts();
     }, [isAuthenticated, token]);
 
-    // Function to handle like/unlike
     const handleToggleLike = async (postId) => {
+        if (!user || !token) {
+            Swal.fire('Error!', 'You must be logged in to like posts.', 'error');
+            return;
+        }
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/like`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
             });
 
             if (response.ok) {
-                // Update the local state to show the change immediately
+                const updatedPost = await response.json();
                 setPosts(prevPosts =>
                     prevPosts.map(post => {
                         if (post._id === postId) {
-                            const hasLiked = post.likes.includes(user.id);
+                            const postLikes = post.likes || [];
+                            const userHasLiked = postLikes.includes(user.id);
                             return {
                                 ...post,
-                                likes: hasLiked
-                                    ? post.likes.filter(id => id !== user.id)
-                                    : [...post.likes, user.id]
+                                likes: userHasLiked
+                                    ? postLikes.filter(id => id !== user.id)
+                                    : [...postLikes, user.id]
                             };
                         }
                         return post;
@@ -157,14 +155,15 @@ export const UserPostBox = () => {
                 Swal.fire('Error!', errorData.message || 'Failed to toggle like.', 'error');
             }
         } catch (err) {
-            Swal.fire('Error!', 'An error occurred.', 'error');
+            Swal.fire('Error!', 'An unexpected network error occurred.', 'error');
+            console.error('Error toggling like:', err);
         }
     };
 
-    // Function to handle comment submission
     const handleCommentSubmit = async (e, postId) => {
         e.preventDefault();
-        if (!commentInput.trim()) return;
+        const commentText = commentInputs[postId] || '';
+        if (!commentText.trim()) return;
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment`, {
@@ -173,12 +172,11 @@ export const UserPostBox = () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: commentInput })
+                body: JSON.stringify({ text: commentText })
             });
 
             if (response.ok) {
                 const data = await response.json();
-                // Add the new comment to the local state
                 setPosts(prevPosts =>
                     prevPosts.map(post => {
                         if (post._id === postId) {
@@ -187,7 +185,7 @@ export const UserPostBox = () => {
                         return post;
                     })
                 );
-                setCommentInput(''); // Clear comment input
+                setCommentInputs(prevInputs => ({ ...prevInputs, [postId]: '' }));
             } else {
                 const errorData = await response.json();
                 Swal.fire('Error!', errorData.message || 'Failed to add comment.', 'error');
@@ -197,7 +195,6 @@ export const UserPostBox = () => {
         }
     };
 
-    // Function to handle post deletion (soft delete) (Requirement 2)
     const handleDeletePost = async (postId) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -217,7 +214,7 @@ export const UserPostBox = () => {
                     });
                     if (response.ok) {
                         Swal.fire('Deleted!', 'Your post has been deleted.', 'success');
-                        fetchPosts(); // Re-fetch posts to update the feed
+                        fetchPosts();
                     } else {
                         const errorData = await response.json();
                         Swal.fire('Error!', errorData.message || 'Failed to delete post.', 'error');
@@ -229,8 +226,7 @@ export const UserPostBox = () => {
         });
     };
 
-    // Function to handle comment editing (Requirement 1)
-    const handleEditComment = async (postId, commentId, newText) => {
+    const handleEditComment = async (postId, commentId, newContent) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment/${commentId}/edit`, {
                 method: 'PUT',
@@ -238,12 +234,12 @@ export const UserPostBox = () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: newText })
+                body: JSON.stringify({ text: newContent })
             });
 
             if (response.ok) {
-                fetchPosts(); // Re-fetch posts to update the feed with the new comment
                 Swal.fire('Updated!', 'Your comment has been updated.', 'success');
+                fetchPosts();
             } else {
                 const errorData = await response.json();
                 Swal.fire('Error!', errorData.message || 'Failed to update comment.', 'error');
@@ -253,7 +249,6 @@ export const UserPostBox = () => {
         }
     };
 
-    // Function to handle comment deletion (soft delete) (Requirement 1)
     const handleDeleteComment = async (postId, commentId) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -273,7 +268,7 @@ export const UserPostBox = () => {
                     });
                     if (response.ok) {
                         Swal.fire('Deleted!', 'Your comment has been deleted.', 'success');
-                        fetchPosts(); // Re-fetch posts to update the feed
+                        fetchPosts();
                     } else {
                         const errorData = await response.json();
                         Swal.fire('Error!', errorData.message || 'Failed to delete comment.', 'error');
@@ -287,6 +282,10 @@ export const UserPostBox = () => {
 
     const formatTimestamp = (timestamp) => {
         return moment(timestamp).fromNow();
+    };
+
+    const toggleCommentSection = (postId) => {
+        setShowCommentSection(showCommentSection === postId ? null : postId);
     };
 
     if (loading) {
@@ -320,102 +319,93 @@ export const UserPostBox = () => {
                     {/* Post Header */}
                     <Card.Header className="bg-white p-4 d-flex align-items-center border-bottom-0">
                         <Image
-                            src={postData.user.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${postData.user.profile_photo_filepath}` : defaultProfilePic}
+                            src={postData.user?.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${postData.user.profile_photo_filepath}` : defaultProfilePic}
                             roundedCircle
                             style={{ width: '48px', height: '48px', objectFit: 'cover' }}
                             className="me-3"
                         />
                         <div className="flex-grow-1">
-                            <h6 className="mb-0 fw-bold">{postData.user.name}</h6>
-                            <p className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>
-                                {postData.user.title || 'User'} • {formatTimestamp(postData.createdAt)}
-                            </p>
+                            <h6 className="mb-0 fw-bold">{postData.user?.name || 'Unknown User'}</h6>
+                            {/* FIX: Use a div instead of a p tag to avoid nesting */}
+                            <div className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>
+                                {postData.user?.userId || 'User'} • {formatTimestamp(postData.createdAt)}
+                            </div>
                         </div>
-                        {user && user.id === postData.user._id && (
+                        {user && user.id === postData.user?._id && (
                             <Button variant="link" className="p-0 text-muted" onClick={() => handleDeletePost(postData._id)}>
                                 <FontAwesomeIcon fixedWidth icon={faTrash} size='md' />
                             </Button>
                         )}
                     </Card.Header>
 
-                    {/* Post Body - Text Content */}
+                    {/* Post Body - Text Content and Attachments */}
                     <Card.Body className="pt-0 px-4 pb-2">
-                        <Card.Text className="mb-3">
-                            {postData.content}
-                        </Card.Text>
-                        {postData.images && postData.images.length > 0 && (
+                        <div className="mb-3">
+                            {postData.title && <h6>{postData.title}</h6>}
+                            {postData.description && <p>{postData.description}</p>}
+                        </div>
+
+                        {/* Renders uploaded attachments (images or PDFs) */}
+                        {postData.attachments && postData.attachments.length > 0 && (
                             <div className="d-flex flex-wrap gap-2 mb-3">
-                                {postData.images.map((img, index) => (
-                                    <Image
-                                        key={index}
-                                        src={`${API_BASE_URL}/eRepo/${img.filepath}`}
-                                        fluid rounded
-                                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-                                    />
+                                {postData.attachments.map((attachment, index) => (
+                                    <div key={index} className="attachment-container">
+                                        {/* Display image if it's an image file */}
+                                        {attachment.mimetype?.startsWith('image/') && (
+                                            <Image
+                                                src={`${API_BASE_URL}/eRepo/${attachment.filepath}`}
+                                                fluid rounded
+                                                style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                                            />
+                                        )}
+                                        {/* Display a link for PDF files */}
+                                        {attachment.mimetype && attachment.mimetype === 'application/pdf' && (
+                                            <div className="pdf-attachment">
+                                                <a href={`${API_BASE_URL}/eRepo/${attachment.filepath}`} target="_blank" rel="noopener noreferrer">
+                                                    <FontAwesomeIcon icon={faFilePdf} /> {attachment.filename}
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
                                 ))}
                             </div>
                         )}
-                        {postData.video && (
-                            <video controls src={`${API_BASE_URL}/eRepo/${postData.video.filepath}`} className="w-100 rounded" />
-                        )}
                     </Card.Body>
 
-                    {/* Interaction Buttons */}
+                    {/* Interaction Buttons (Likes, Comments, etc.) */}
                     <div className="d-flex justify-content-around align-items-center border-top py-2 px-4">
-                        <Row className="w-100 gx-0">
-                            <Col xs={3} className="text-center d-flex justify-content-center">
-                                <Button
-                                    variant="link"
-                                    className="text-muted d-flex flex-column flex-md-row align-items-center justify-content-center text-decoration-none py-2"
-                                    onClick={() => handleToggleLike(postData._id)}
-                                >
-                                    <FontAwesomeIcon fixedWidth icon={faHeart} size='md' style={{ color: postData.likes.includes(user.id) ? 'red' : 'inherit' }} />
-                                    <span className="mt-1 d-none d-md-inline ms-md-2 label-text">Like ({postData.likes.length})</span>
-                                </Button>
-                            </Col>
-                            <Col xs={3} className="text-center d-flex justify-content-center">
-                                <Button
-                                    variant="link"
-                                    className="text-muted d-flex flex-column flex-md-row align-items-center justify-content-center text-decoration-none py-2"
-                                    onClick={() => setShowCommentSection(postData._id === showCommentSection ? null : postData._id)}
-                                >
-                                    <FontAwesomeIcon fixedWidth icon={faComment} size='md' />
-                                    <span className="mt-1 d-none d-md-inline ms-md-2 label-text">Comment ({postData.comments.length})</span>
-                                </Button>
-                            </Col>
-                            <Col xs={3} className="text-center d-flex justify-content-center">
-                                <Button variant="link" className="text-muted d-flex flex-column flex-md-row align-items-center justify-content-center text-decoration-none py-2">
-                                    <FontAwesomeIcon fixedWidth icon={faShare} size='md' />
-                                    <span className="mt-1 d-none d-md-inline ms-md-2 label-text">Share</span>
-                                </Button>
-                            </Col>
-                            <Col xs={3} className="text-center d-flex justify-content-center">
-                                <Button variant="link" className="text-muted d-flex flex-column flex-md-row align-items-center justify-content-center text-decoration-none py-2">
-                                    <FontAwesomeIcon fixedWidth icon={faLink} size='md' />
-                                    <span className="mt-1 d-none d-md-inline ms-md-2 label-text">Connect</span>
-                                </Button>
-                            </Col>
-                        </Row>
+                        <Button variant="link" className="text-muted" onClick={() => handleToggleLike(postData._id)}>
+                            <FontAwesomeIcon icon={faThumbsUp} className={postData.likes?.includes(user.id) ? 'text-primary' : ''} />
+                            <span className="ms-2">{postData.likes?.length || 0} Likes</span>
+                        </Button>
+                        <Button variant="link" className="text-muted" onClick={() => toggleCommentSection(postData._id)}>
+                            <FontAwesomeIcon icon={faComment} />
+                            <span className="ms-2">{postData.comments?.length || 0} Comments</span>
+                        </Button>
+                        <Button variant="link" className="text-muted">
+                            <FontAwesomeIcon icon={faShare} />
+                            <span className="ms-2">Share</span>
+                        </Button>
                     </div>
 
-                    {/* Comment Form and Comments Section */}
+                    {/* Comments Section */}
                     {showCommentSection === postData._id && (
-                        <>
-                            <div className="p-3 bg-light d-flex align-items-center border-top">
-                                <Image src={user?.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${user.profile_photo_filepath}` : defaultProfilePic} roundedCircle style={{ width: '30px', height: '30px', objectFit: 'cover' }} className="me-2" />
-                                <Form className="w-100" onSubmit={(e) => handleCommentSubmit(e, postData._id)}>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Add a comment..."
-                                        className="rounded-pill bg-white border-0 py-2 px-3"
-                                        value={commentInput}
-                                        onChange={(e) => setCommentInput(e.target.value)}
-                                    />
-                                </Form>
+                        <Card.Footer className="bg-white" style={{ borderRadius: '15px' }}>
+                            <div className="comment-box mb-3 d-flex">
+                                <Form.Control
+                                    as="textarea"
+                                    rows={1}
+                                    placeholder="Write a comment..."
+                                    value={commentInputs[postData._id] || ''}
+                                    onChange={(e) => setCommentInputs({ ...commentInputs, [postData._id]: e.target.value })}
+                                    style={{ resize: 'none' }}
+                                />
+                                <Button className="ms-2" onClick={(e) => handleCommentSubmit(e, postData._id)}>
+                                    Post
+                                </Button>
                             </div>
-                            <div className="p-3">
-                                {postData.comments.map(comment => (
-                                    // Pass handler functions and current user ID
+                            <div className="comments-list">
+                                {postData.comments?.map(comment => (
                                     <CommentItem
                                         key={comment._id}
                                         comment={comment}
@@ -426,10 +416,12 @@ export const UserPostBox = () => {
                                     />
                                 ))}
                             </div>
-                        </>
+                        </Card.Footer>
                     )}
                 </Card>
             ))}
         </Container>
     );
 };
+
+export default UserPostBox;

@@ -4,6 +4,7 @@
 
 .leftSideBar {
     border-radius: 15px;
+   
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -167,3 +168,6 @@
     margin-bottom: 0;
 }
 
+.advertismentCard {
+    border: 2px solid black !important;
+}

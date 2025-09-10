@@ -26,7 +26,7 @@ export const PostDialogueBox = () => {
     
     return (
         <>
-            <Container fluid className='bg-white px-4 py-4 mb-2 postDialogueBox'>
+            <Container fluid className='bg-white px-4 py-4 mb-2 postDialogueBox' style={{border: '2px solid black'}}>
                 <Row>
                     <Col className='d-flex justify-content-center align-items-top gap-3' md={1}>
                         <div>

@@ -112,25 +112,7 @@ const UserCard = ({ name, mutualConnections, image }) => {
 };
 export const ConnectionBussinessBox = () => {
     return (
-        // <Container className="mt-3 pt-3 postDialogueBox bg-white p-4 rounded shadow-sm">
-        //     <div className="d-flex justify-content-between align-items-center mb-3">
-        //         <h5 className="text-left fw-bold mb-0">Connect Business/Project</h5>
-        //         <Button variant="link" className="p-0 text-decoration-none">See all</Button>
-        //     </div>
-        //     <div className="text-left">
-        //         <Row className="justify-content-start">
-        //             {usersData.map(user => (
-        //                 <UserCard
-        //                     key={user.id}
-        //                     name={user.name}
-        //                     mutualConnections={user.mutualConnections}
-        //                     image={user.image}
-        //                 />
-        //             ))}
-        //         </Row>
-        //     </div>
-        // </Container>
-        <Container className="mt-3 pt-3 connectionBussinessBox bg-white p-4  shadow-sm">
+        <Container className="mt-3 pt-3 connectionBussinessBox bg-white p-4  shadow-sm" style={{ border: '2px solid black' }}>
             <div className="d-flex justify-content-between align-items-center mb-3 ">
                 <h5 className="text-left fw-bold mb-0">Connect Business/Project</h5>
                 <Button variant="link" className="p-0 text-decoration-none">See all</Button>

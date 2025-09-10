@@ -112,7 +112,7 @@ const register = async (req, res) => {
         await newUser.save();
 
         // Using Email Template
-        const templatePath = path.join(__dirname, '../utils/email_template.html');
+        const templatePath = path.join(__dirname, '../utils/email_templates/otpForRegistrationEmailVerification.html');
         let emailHtml = fs.readFileSync(templatePath, 'utf8');
         emailHtml = emailHtml.replace('{{otp}}', otp);
 
