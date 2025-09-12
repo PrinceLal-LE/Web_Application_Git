@@ -30,3 +30,84 @@
         /* Larger font size for desktop */
     }
 }
+
+.image-carousel-modal .modal-content {
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for the modal content */
+    border: none;
+    color: white;
+}
+
+.image-carousel-modal .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%); /* White close button */
+    position: absolute; /* Position relative to modal */
+    top: 15px;
+    right: 15px;
+    z-index: 1060; /* Higher than carousel controls */
+}
+
+/* Custom styles for carousel controls */
+.carousel-control-prev,
+.carousel-control-next {
+    /* Reset Bootstrap's default large width */
+    width: 50px !important; /* Make controls a fixed, smaller width */
+    height: 50px !important; /* Make controls a fixed height */
+    margin: auto 10px !important; /* Add some margin from the sides */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Semi-transparent background */
+    border-radius: 50%; /* Circular background */
+    display: flex; /* Use flex to center the icon */
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7; /* Make them slightly transparent when not hovered */
+    transition: opacity 0.3s ease; /* Smooth transition */
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1; /* Fully opaque on hover */
+    background-color: rgba(0, 0, 0, 0.7) !important; /* Slightly darker on hover */
+}
+
+.carousel-control-prev {
+    left: 10px !important; /* Position from the left edge */
+}
+
+.carousel-control-next {
+    right: 10px !important; /* Position from the right edge */
+}
+
+.carousel-control-prev .carousel-control-icon,
+.carousel-control-next .carousel-control-icon {
+    /* Style the FontAwesome icons themselves */
+    color: white;
+    filter: none; /* Remove previous drop-shadow if it interferes */
+    font-size: 1.5rem; /* Adjust icon size */
+}
+
+/* Ensure the image takes up the full space within its container */
+.carousel-item > div { /* Target the div wrapping the image in the carousel */
+    height: 70vh; /* This was already set in JSX, ensuring it takes height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-image {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    /* Optional: add some padding if you want space between image and modal edge */
+    /* padding: 20px; */ 
+}
+
+/* This is if you want the carousel indicators (dots) to be styled */
+.carousel-indicators [data-bs-target] {
+    background-color: white; /* White indicators */
+    opacity: 0.5;
+}
+
+.carousel-indicators .active {
+    opacity: 1;
+}

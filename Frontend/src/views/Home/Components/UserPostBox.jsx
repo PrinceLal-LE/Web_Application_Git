@@ -2,79 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Card, Image, Button, Spinner, Alert, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faThumbsUp, faComment, faShare, faTrash, faFilePdf, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faComment, faShare, faTrash, faSpinner, faFilePdf } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-import '../styles/UserPostBox.css';
+import '../styles/UserPostBox.css'; // Make sure this CSS file is imported
+import ImageCarouselModal from './ImageCarouselModal'; // Import the new modal component
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL;
 const defaultProfilePic = '/images/avtar.png';
-
-// Component to render a single comment
-const CommentItem = ({ comment, postId, onEdit, onDelete, currentUserId }) => {
-    const isCommentOwner = comment.user?._id === currentUserId;
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedText, setEditedText] = useState(comment.text);
-    const [commentEditError, setCommentEditError] = useState('');
-
-    const handleEditSave = () => {
-        if (editedText.trim() === '' || editedText.length > 250) {
-            setCommentEditError('Comment must be between 1 and 250 characters.');
-            return;
-        }
-        onEdit(postId, comment._id, editedText);
-        setIsEditing(false);
-        setCommentEditError('');
-    };
-
-    return (
-        <div className="d-flex align-items-start mb-2">
-            <Image
-                src={comment.user?.profile_photo_filepath ? `${API_BASE_URL}/eRepo/${comment.user.profile_photo_filepath}` : defaultProfilePic}
-                roundedCircle
-                style={{ width: '36px', height: '36px', objectFit: 'cover' }}
-                className="me-3"
-            />
-            <div className="flex-grow-1 bg-light rounded-3 p-3">
-                <h6 className="mb-1 fw-bold" style={{ fontSize: '0.9rem' }}>{comment.user?.name || 'Unknown User'}</h6>
-                {isEditing ? (
-                    <>
-                        <Form.Control
-                            as="textarea"
-                            rows={2}
-                            value={editedText}
-                            onChange={(e) => setEditedText(e.target.value)}
-                            isInvalid={!!commentEditError}
-                            maxLength={250}
-                        />
-                        <Form.Control.Feedback type="invalid">{commentEditError}</Form.Control.Feedback>
-                        <div className="d-flex mt-2" style={{ fontSize: '0.75rem' }}>
-                            <Button variant="primary" size="sm" onClick={handleEditSave}>Save</Button>
-                            <Button variant="secondary" size="sm" onClick={() => setIsEditing(false)} className="ms-2">Cancel</Button>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <p className="mb-2" style={{ fontSize: '0.85rem' }}>{comment.text}</p>
-                        <div className="d-flex" style={{ fontSize: '0.75rem' }}>
-                            {isCommentOwner && (
-                                <>
-                                    <Button variant="link" className="text-muted p-0 me-3 text-decoration-none" onClick={() => setIsEditing(true)}>
-                                        <FontAwesomeIcon icon={faPencilAlt} /> Edit
-                                    </Button>
-                                    <Button variant="link" className="text-muted p-0 text-decoration-none" onClick={() => onDelete(postId, comment._id)}>
-                                        <FontAwesomeIcon icon={faTrash} /> Delete
-                                    </Button>
-                                </>
-                            )}
-                        </div>
-                    </>
-                )}
-            </div>
-        </div>
-    );
-};
 
 export const UserPostBox = () => {
     const [posts, setPosts] = useState([]);
@@ -83,6 +19,11 @@ export const UserPostBox = () => {
     const [commentInputs, setCommentInputs] = useState({});
     const [showCommentSection, setShowCommentSection] = useState(null);
     const { user, token, isAuthenticated } = useSelector((state) => state.auth);
+
+    // State for the Image Carousel Modal
+    const [showCarousel, setShowCarousel] = useState(false);
+    const [currentImages, setCurrentImages] = useState([]);
+    const [startingIndex, setStartingIndex] = useState(0);
 
     const fetchPosts = async () => {
         if (!isAuthenticated || !token) {
@@ -93,31 +34,28 @@ export const UserPostBox = () => {
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/feed`, {
-                method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
+                    'Authorization': `Bearer ${token}`
+                }
             });
-
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to fetch posts.');
+                throw new Error('Failed to fetch posts');
             }
-
             const data = await response.json();
             setPosts(data.posts);
         } catch (err) {
             console.error('Error fetching posts:', err);
-            setError(err.message || 'An error occurred while fetching posts.');
+            setError(err.message || 'Failed to load posts. Please try again later.');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchPosts();
-    }, [isAuthenticated, token]);
+        if (token) {
+            fetchPosts();
+        }
+    }, [token, isAuthenticated]);
 
     const handleToggleLike = async (postId) => {
         if (!user || !token) {
@@ -132,28 +70,25 @@ export const UserPostBox = () => {
                     'Content-Type': 'application/json',
                 },
             });
-
-            if (response.ok) {
-                const updatedPost = await response.json();
-                setPosts(prevPosts =>
-                    prevPosts.map(post => {
-                        if (post._id === postId) {
-                            const postLikes = post.likes || [];
-                            const userHasLiked = postLikes.includes(user.id);
-                            return {
-                                ...post,
-                                likes: userHasLiked
-                                    ? postLikes.filter(id => id !== user.id)
-                                    : [...postLikes, user.id]
-                            };
-                        }
-                        return post;
-                    })
-                );
-            } else {
-                const errorData = await response.json();
-                Swal.fire('Error!', errorData.message || 'Failed to toggle like.', 'error');
+            if (!response.ok) {
+                throw new Error('Failed to toggle like.');
             }
+            const updatedPost = await response.json();
+            setPosts(prevPosts =>
+                prevPosts.map(post => {
+                    if (post._id === postId) {
+                        const postLikes = post.likes || [];
+                        const userHasLiked = postLikes.includes(user.id);
+                        return {
+                            ...post,
+                            likes: userHasLiked
+                                ? postLikes.filter(id => id !== user.id)
+                                : [...postLikes, user.id]
+                        };
+                    }
+                    return post;
+                })
+            );
         } catch (err) {
             Swal.fire('Error!', 'An unexpected network error occurred.', 'error');
             console.error('Error toggling like:', err);
@@ -172,7 +107,7 @@ export const UserPostBox = () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: commentText })
+                body: JSON.stringify({ content: commentText })
             });
 
             if (response.ok) {
@@ -194,7 +129,7 @@ export const UserPostBox = () => {
             Swal.fire('Error!', 'An error occurred.', 'error');
         }
     };
-
+    
     const handleDeletePost = async (postId) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -226,7 +161,7 @@ export const UserPostBox = () => {
         });
     };
 
-    const handleEditComment = async (postId, commentId, newContent) => {
+    const handleEditComment = async (postId, commentId, newText) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/posts/${postId}/comment/${commentId}/edit`, {
                 method: 'PUT',
@@ -234,12 +169,12 @@ export const UserPostBox = () => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ text: newContent })
+                body: JSON.stringify({ content: newText })
             });
 
             if (response.ok) {
-                Swal.fire('Updated!', 'Your comment has been updated.', 'success');
                 fetchPosts();
+                Swal.fire('Updated!', 'Your comment has been updated.', 'success');
             } else {
                 const errorData = await response.json();
                 Swal.fire('Error!', errorData.message || 'Failed to update comment.', 'error');
@@ -288,6 +223,19 @@ export const UserPostBox = () => {
         setShowCommentSection(showCommentSection === postId ? null : postId);
     };
 
+    // New functions for carousel
+    const openCarousel = (images, index) => {
+        setCurrentImages(images);
+        setStartingIndex(index);
+        setShowCarousel(true);
+    };
+
+    const closeCarousel = () => {
+        setShowCarousel(false);
+        setCurrentImages([]);
+        setStartingIndex(0);
+    };
+
     if (loading) {
         return (
             <Container className="text-center my-5">
@@ -304,6 +252,7 @@ export const UserPostBox = () => {
             </Container>
         );
     }
+
     if (posts.length === 0) {
         return (
             <Container className="my-5 text-center text-muted">
@@ -311,6 +260,8 @@ export const UserPostBox = () => {
             </Container>
         );
     }
+    
+    const MAX_VISIBLE_IMAGES = 4;
 
     return (
         <Container className="my-4 p-0" style={{ maxWidth: '100%', borderRadius: '15px' }}>
@@ -326,7 +277,6 @@ export const UserPostBox = () => {
                         />
                         <div className="flex-grow-1">
                             <h6 className="mb-0 fw-bold">{postData.user?.name || 'Unknown User'}</h6>
-                            {/* FIX: Use a div instead of a p tag to avoid nesting */}
                             <div className="text-muted mb-0" style={{ fontSize: '0.8rem' }}>
                                 {postData.user?.userId || 'User'} • {formatTimestamp(postData.createdAt)}
                             </div>
@@ -340,22 +290,22 @@ export const UserPostBox = () => {
 
                     {/* Post Body - Text Content and Attachments */}
                     <Card.Body className="pt-0 px-4 pb-2">
-                        <div className="mb-3">
+                        <div className="mb-3"> 
                             {postData.title && <h6>{postData.title}</h6>}
                             {postData.description && <p>{postData.description}</p>}
                         </div>
 
                         {/* Renders uploaded attachments (images or PDFs) */}
                         {postData.attachments && postData.attachments.length > 0 && (
-                            <div className="d-flex flex-wrap gap-2 mb-3">
-                                {postData.attachments.map((attachment, index) => (
-                                    <div key={index} className="attachment-container">
+                            <div className="attachment-gallery mb-3">
+                                {postData.attachments.slice(0, MAX_VISIBLE_IMAGES).map((attachment, index) => (
+                                    <div key={index} className="gallery-item" onClick={() => openCarousel(postData.attachments, index)}>
                                         {/* Display image if it's an image file */}
                                         {attachment.mimetype?.startsWith('image/') && (
                                             <Image
                                                 src={`${API_BASE_URL}/eRepo/${attachment.filepath}`}
                                                 fluid rounded
-                                                style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                                                className="gallery-image"
                                             />
                                         )}
                                         {/* Display a link for PDF files */}
@@ -364,6 +314,13 @@ export const UserPostBox = () => {
                                                 <a href={`${API_BASE_URL}/eRepo/${attachment.filepath}`} target="_blank" rel="noopener noreferrer">
                                                     <FontAwesomeIcon icon={faFilePdf} /> {attachment.filename}
                                                 </a>
+                                            </div>
+                                        )}
+
+                                        {/* Conditional +N overlay */}
+                                        {index === MAX_VISIBLE_IMAGES - 1 && postData.attachments.length > MAX_VISIBLE_IMAGES && (
+                                            <div className="image-overlay d-flex justify-content-center align-items-center">
+                                                <span>+{postData.attachments.length - MAX_VISIBLE_IMAGES}</span>
                                             </div>
                                         )}
                                     </div>
@@ -390,7 +347,7 @@ export const UserPostBox = () => {
 
                     {/* Comments Section */}
                     {showCommentSection === postData._id && (
-                        <Card.Footer className="bg-white" style={{ borderRadius: '15px' }}>
+                        <Card.Footer className="bg-white">
                             <div className="comment-box mb-3 d-flex">
                                 <Form.Control
                                     as="textarea"
@@ -420,6 +377,14 @@ export const UserPostBox = () => {
                     )}
                 </Card>
             ))}
+            {/* Image Carousel Modal */}
+            <ImageCarouselModal
+                show={showCarousel}
+                onHide={closeCarousel}
+                images={currentImages}
+                startIndex={startingIndex}
+                apiBaseUrl={API_BASE_URL}
+            />
         </Container>
     );
 };
